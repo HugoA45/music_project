@@ -1,11 +1,15 @@
 from transformers import BertConfig
-from MidiBERT.model import MidiBert
+from model import MidiBert
 import pickle
 import torch
+import sys
 
-def load_model(checkpoint_path):
+sys.path.insert(0, '.')
+
+def load_model():
+
     print("Loading Dictionary")
-    with open('data_creation/prepare_data/dict/CP.pkl', 'rb') as f:
+    with open('/root/code/HugoA45/music_project/music_project/model/CP.pkl', 'rb') as f:
         e2w, w2e = pickle.load(f)
 
     # Define the configuration for the BERT model
@@ -20,8 +24,12 @@ def load_model(checkpoint_path):
     # Initialize the model
     midibert = MidiBert(bertConfig=configuration, e2w=e2w, w2e=w2e)
 
+    # Define the path to your checkpoint here
+    ckpt_path = '/root/code/HugoA45/music_project/music_project/model/pretrain_model.ckpt'
+
     # Load the checkpoint
-    checkpoint = torch.load(checkpoint_path, map_location='cpu')
+    checkpoint = torch.load(ckpt_path, map_location='cpu')
+
 
     # Remove the unexpected key from the state dictionary
     if "bert.embeddings.position_ids" in checkpoint['state_dict']:
@@ -29,11 +37,10 @@ def load_model(checkpoint_path):
 
     # Load the state dictionary from the checkpoint into the model
     midibert.load_state_dict(checkpoint['state_dict'])
-    model = midibert.bert.from_pretrained('bert-base-uncased')
-    num_parameters = sum(p.numel() for p in model.parameters())
 
-    print(f'The model has {num_parameters} parameters.')
-    return model
 
-# Example usage:
-# model = load_model('/mnt/c/Users/Hugo Amaro/Desktop/bootcamp/project/MIDI_BERT/result/pretrain_model.ckpt')
+    return midibert.bert
+
+model = load_model()
+
+print(model)
