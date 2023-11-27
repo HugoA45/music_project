@@ -2,9 +2,6 @@ from transformers import BertConfig
 from model import MidiBert
 import pickle
 import torch
-import sys
-
-sys.path.insert(0, '.')
 
 def load_model():
 
