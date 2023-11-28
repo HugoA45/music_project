@@ -40,6 +40,6 @@ def load_model():
 
     return midibert, embeddings_position_ids
 
-model = load_model()
+model, embeddings_position_ids = load_model()
 
 print(model)
