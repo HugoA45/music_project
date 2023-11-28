@@ -28,7 +28,9 @@ def load_model():
     checkpoint = torch.load(ckpt_path, map_location='cpu')
 
 
-    # Remove the unexpected key from the state dictionary
+    # save embedings_position_ids and remove them from the state dictionary
+    embeddings_position_ids =  checkpoint['state_dict']["bert.embeddings.position_ids"]
+
     if "bert.embeddings.position_ids" in checkpoint['state_dict']:
         del checkpoint['state_dict']["bert.embeddings.position_ids"]
 
@@ -36,7 +38,7 @@ def load_model():
     midibert.load_state_dict(checkpoint['state_dict'])
 
 
-    return midibert.bert
+    return midibert, embeddings_position_ids
 
 model = load_model()
 
