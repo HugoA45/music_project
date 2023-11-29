@@ -12,6 +12,7 @@ from model_prediction.py import prediction
 # 2. Website Structure
 st.markdown("""# FEED ME MUSIC""")
 
+
 # 2.1 Load MP3
 mp3_file = st.file_uploader("Upload an MP3 file", type=["mp3"])
 
@@ -22,7 +23,7 @@ if mp3_file is not None:
 # Process data
 # 2.2 Transform mp3 to midi
 
-# 2.3 Tokenize data for analysis?
+# 2.3 Tokenize the data
 # Fetch model from container
 
 
