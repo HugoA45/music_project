@@ -1,0 +1,3 @@
+Tobi Paths:
+PretrainModel: '/Users/tobiaslandgraf/code/HugoA45/music_project/music_project/model/pretrain_model.ckpt'
+Checkpoint: '/Users/tobiaslandgraf/code/HugoA45/music_project/music_project/model/CP.pkl'
