@@ -1,15 +1,16 @@
 from transformers import BertConfig
-from model import MidiBert
+from model.model import MidiBert
 import pickle
 import torch
 
-def load_model():
+def load_model(dict_path, ckpt_path):
 
     print("Loading Dictionary")
-    with open('/root/code/HugoA45/music_project/music_project/model/CP.pkl', 'rb') as f:
+    with open(dict_path, 'rb') as f:
         e2w, w2e = pickle.load(f)
 
-    # Define the configuration for the BERT model
+    # Define the configuration for the BERT model according to
+    # https://github.com/wazenmai/MIDI-BERT
     configuration = BertConfig(
         max_position_embeddings=512,
         position_embedding_type='relative_key_query',
@@ -21,25 +22,23 @@ def load_model():
     # Initialize the model
     midibert = MidiBert(bertConfig=configuration, e2w=e2w, w2e=w2e)
 
-    # Define the path to your checkpoint here
-    ckpt_path = '/root/code/HugoA45/music_project/music_project/model/pretrain_model.ckpt'
+    #load the checkpoint
+    checkpoint = load_checkpoint(ckpt_path)
 
-    # Load the checkpoint
-    checkpoint = torch.load(ckpt_path, map_location='cpu')
-
-
-    # save embedings_position_ids and remove them from the state dictionary
-    embeddings_position_ids =  checkpoint['state_dict']["bert.embeddings.position_ids"]
-
+    # Remove embeddings.position_ids from the state dictionary
+    # and save it in case it is necessary
     if "bert.embeddings.position_ids" in checkpoint['state_dict']:
+        embeddings_position_ids =  checkpoint['state_dict']["bert.embeddings.position_ids"]
         del checkpoint['state_dict']["bert.embeddings.position_ids"]
 
     # Load the state dictionary from the checkpoint into the model
     midibert.load_state_dict(checkpoint['state_dict'])
+    midibert.eval()
 
+    return midibert
 
-    return midibert, embeddings_position_ids
+def load_checkpoint(ckpt_path):
 
-model, embeddings_position_ids = load_model()
+    checkpoint = torch.load(ckpt_path, map_location='cpu')
 
-print(model)
+    return checkpoint
