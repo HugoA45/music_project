@@ -4,30 +4,39 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+from dinis_test import *
 
 # 1.2 Model Features
-from model_prediction.py import prediction
+'''
+< Placeholder space for features to be imported >
+from model.py import <CONVERSION_FUNCTION_PLACEHOLDER>
+import
+'''
 
 
-# 2. Website Structure
+# 2. Load data
 st.markdown("""# FEED ME MUSIC""")
 
 
 # 2.1 Load MP3
 mp3_file = st.file_uploader("Upload an MP3 file", type=["mp3"])
 
-if mp3_file is not None:
-    # Process the uploaded file (you can add your logic here)
-    st.audio(mp3_file, format='audio/mp3', start_time=0)
 
-# Process data
-# 2.2 Transform mp3 to midi
-
-# 2.3 Tokenize the data
-# Fetch model from container
+# 3. Process data
+# 3.2 Transform mp3 to midi
+# 3.3 Tokenize the data
+# 3.4 Transform Tokeens to CP
 
 
-# 2.4 Predict composer
-#composer = predict_composer(midi_file_path)
+if mp3_file:
+# Process the uploaded file from mp3 to CP
+    cp = <CONVERSION_FUNCTION_PLACEHOLDER>(mp3_file)
 
-# 2.5 Generate image
+if midi_to_CP:
+    prediction = <MODEL_PLACEHOLDER>.predict(cp)
+    st.write(prediction)
+
+
+# Open items - How to
+# Fetch model from container (Initiate model)
+# 4. Generate image (Optional)
