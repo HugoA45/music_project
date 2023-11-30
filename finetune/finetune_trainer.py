@@ -6,7 +6,7 @@ import torch.nn as nn
 from transformers import AdamW
 from torch.nn.utils import clip_grad_norm_
 
-from finetune.finetune_model import TokenClassification, SequenceClassification
+from finetune_model import TokenClassification, SequenceClassification
 
 
 class FinetuneTrainer:
