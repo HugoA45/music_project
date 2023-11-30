@@ -1,5 +1,5 @@
 from transformers import BertConfig
-from model.model import MidiBert
+from bert.model import MidiBert
 import pickle
 import torch
 
