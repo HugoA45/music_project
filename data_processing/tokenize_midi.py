@@ -16,6 +16,7 @@ DEFAULT_TEMPO_INTERVALS = [range(30, 90), range(90, 150), range(150, 210)]
 
 # parameters for output
 DEFAULT_RESOLUTION = 480
+
 # utils.py components
 class Item(object):
     # ... (include the entire definition of Item class from utils.py)
@@ -26,6 +27,7 @@ class Item(object):
             self.velocity = velocity
             self.pitch = pitch
             self.Type = Type
+
 def read_items(file_path):
     # ... (include the entire function body from utils.py)
     midi_obj = miditoolkit.midi.parser.MidiFile(file_path)
