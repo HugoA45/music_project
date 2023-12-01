@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 from tqdm import tqdm
-import utils
+from data_processing import utils
 
 Composer = {
     "Bethel": 0,
