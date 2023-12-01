@@ -6,9 +6,9 @@ import pickle
 import pathlib
 import argparse
 import numpy as np
-from data_processing.model import *
 
-
+from model import CP
+import model
 
 
 def get_args():
@@ -17,7 +17,7 @@ def get_args():
     parser.add_argument('-t', '--task', default='', choices=['melody', 'velocity', 'composer', 'emotion'])
 
     ### path ###
-    parser.add_argument('--dict', type=str, default='/Users/tobiaslandgraf/code/HugoA45/music_project/music_project/bert/CP.pkl') ##needs to be updated
+    parser.add_argument('--dict', type=str, default='bert/CP.pkl') ##needs to be updated
     parser.add_argument('--dataset', type=str, choices=["pop909", "pop1k7", "ASAP", "pianist8", "emopia"])
     parser.add_argument('--input_dir', type=str, default='')
     parser.add_argument('--input_file', type=str, default='')
