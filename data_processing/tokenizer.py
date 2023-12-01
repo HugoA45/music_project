@@ -1,34 +1,44 @@
+import numpy as np
 import subprocess
+import os
+import sys
 
-def run_python_script(script_path, input_dir):
+def tokenize_midi(midi_dir, cp_dir):
     """
-    Executes a Python script with the specified input directory.
-
+    Executes a Python script with the specified input directory and returns the content of the generated .npy file.
     Args:
     script_path (str): Path to the Python script.
     input_dir (str): Input directory to pass to the script.
-
+    output_dir (str): Directory where the .npy file is expected to be saved.
     Returns:
-    int: The return code of the script execution. 0 indicates success.
+    ndarray or None: The content of the .npy file as a NumPy array, or None if no file is found.
     """
-    # Define the command and arguments
-    command = "python3"
 
-    # Construct the full command
-    full_command = [command, script_path, "--input_dir", input_dir]
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    script_path = os.path.join(base_dir, 'data_processing', 'preprocess.py')
 
-    # Run the command
-    process = subprocess.run(full_command, check=True)
+    # Construct and run the command
+    full_command = ["python", script_path, "--input_dir", midi_dir]
+    subprocess.run(full_command, check=True)
 
-    # Return the return code
-    return process.returncode
+    # Assuming the script saves a single .npy file in the output_dir
+    for file in os.listdir(cp_dir):
+        if file.endswith('.npy'):
+            npy_path = os.path.join(cp_dir, file)
+            npy_content = np.load(npy_path, allow_pickle=True)
+            return npy_content
+    # If no .npy file is found
+    return None
 
-# Example usage
-script_path = '/path/to/data_processing/main.py'  # Replace with your actual script path
-input_dir = '/path/to/output/dir'  # Replace with your actual input directory
-
-return_code = run_python_script(script_path, input_dir)
-if return_code == 0:
-    print("Script executed successfully.")
-else:
-    print(f"Script returned an error. Return code: {return_code}")
+# # Determine the base directory of the project
+# base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# # Construct paths relative to the base directory
+# script_path = os.path.join(base_dir, 'data_processing', 'main.py')
+# input_dir = os.path.join(base_dir, 'Output_Dir')
+# output_dir = os.path.join(base_dir, 'data', 'CP_data', 'tmp')
+# # Execute the function
+# npy_content = tokenize_midi(script_path, input_dir, output_dir)
+# if npy_content is not None:
+#     print("Script executed successfully and .npy file content obtained.")
+# else:
+#     print("No .npy file was found in the output directory.")
