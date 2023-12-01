@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-def prediction(data, model, task=None):
+def prediction(data, model, task='composer_classification'):
 
     res = model.forward(torch.from_numpy(data))
 

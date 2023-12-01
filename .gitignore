@@ -160,5 +160,5 @@ cython_debug/
 #.idea/
 
 
-bert/pretrain_model.ckpt
+resources/pretrain_model.ckpt
 .DS_Store
