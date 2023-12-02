@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 from tqdm import tqdm
-import melody_extraction.midibert.utils as utils
+import data_processing.utilities as utilities
 
 
 class CP(object):
@@ -13,15 +13,17 @@ class CP(object):
         self.pad_word = [self.event2word[etype]['%s <PAD>' % etype] for etype in classes]
 
     def extract_events(self, input_path):
-        note_items, tempo_items = utils.read_items(input_path)
+        note_items, tempo_items = utilities.read_items(input_path)
         if len(note_items) == 0:   # if the midi contains nothing
             return None
-        note_items = utils.quantize_items(note_items)
-        max_time = note_items[-1].end
+
+        note_items = utilities.quantize_items(note_items)
+        # max_time = note_items[-1].end
+        max_time = note_items[-1]['end']
         items = tempo_items + note_items
-        
-        groups = utils.group_items(items, max_time)
-        events = utils.item2event(groups)
+
+        groups = utilities.group_items(items, max_time)
+        events = utilities.item2event(groups, task = 'composer')
         return events
 
     def padding(self, data, max_len):
@@ -33,10 +35,11 @@ class CP(object):
 
     def prepare_data(self, midi_path, max_len):
         """
-            Prepare data for a single midi 
+            Prepare data for a single midi
         """
         # extract events
         events = self.extract_events(midi_path)
+
         if not events:  # if midi contains nothing
             raise ValueError(f'The given {midi_path} is empty')
 
@@ -48,14 +51,14 @@ class CP(object):
 
         for tup in events:
             nts = []
-            if len(tup) == 5:    # Note
+            if len(tup) == 4:    # Note
                 for e in tup:
                     if e.name == 'Velocity':
                         continue
                     e_text = '{} {}'.format(e.name, e.value)
                     nts.append(self.event2word[e.name][e_text])
                 words.append(nts)
-                
+
         # slice to chunks so that max length = max_len (default: 512)
         slice_words = []
         for i in range(0, len(words), max_len):
@@ -66,5 +69,6 @@ class CP(object):
             slice_words[-1] = self.padding(slice_words[-1], max_len)
 
         slice_words = np.array(slice_words)
+
 
         return events, slice_words

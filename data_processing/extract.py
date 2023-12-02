@@ -1,11 +1,11 @@
 """
 [ Melody Extraction ]
-Given path to input midi file, save the predicted melody midi file. 
-Please note that the model is trained on pop909 dataset (containing 3 classes: melody, bridge, accompaniment), 
+Given path to input midi file, save the predicted melody midi file.
+Please note that the model is trained on pop909 dataset (containing 3 classes: melody, bridge, accompaniment),
 so there are 2 interpretations: view `bridge` as `melody` or view it as `accompaniment`.
 You could choose the mode - `bridge` is viewed as `melody` by default.
 
-Also, the sequence is zero-padded so that the shape (length) is the same, but it won't affect the results, 
+Also, the sequence is zero-padded so that the shape (length) is the same, but it won't affect the results,
 as zero-padded tokens will be excluded in post-processing.
 """
 
@@ -23,13 +23,13 @@ from torch.utils.data import DataLoader
 import torch
 import torch.nn as nn
 from transformers import BertConfig
+import file_paths
+from midi2CP import CP
+from data_processing.utilities import DEFAULT_VELOCITY_BINS, DEFAULT_FRACTION, DEFAULT_DURATION_BINS, DEFAULT_TEMPO_INTERVALS, DEFAULT_RESOLUTION
+#from model import MidiBert
+#from MidiBERT.finetune_model import TokenClassification
 
-from melody_extraction.midibert.midi2CP import CP
-from melody_extraction.midibert.utils import DEFAULT_VELOCITY_BINS, DEFAULT_FRACTION, DEFAULT_DURATION_BINS, DEFAULT_TEMPO_INTERVALS, DEFAULT_RESOLUTION
-from MidiBERT.model import MidiBert
-from MidiBERT.finetune_model import TokenClassification
-
-
+'''
 def boolean_string(s):
     if s not in ['False', 'True']:
         raise ValueError('Not a valid boolean string')
@@ -48,7 +48,7 @@ def get_args():
     parser.add_argument('--max_seq_len', type=int, default=512, help='all sequences are padded to `max_seq_len`')
     parser.add_argument('--hs', type=int, default=768)
     parser.add_argument('--bridge', default=True, type=boolean_string, help='View bridge as melody (True) or accompaniment (False)')
-    
+
     ### cuda ###
     parser.add_argument('--cpu', action="store_true")  # default: false
 
@@ -64,29 +64,31 @@ def get_args():
     return args
 
 
+
 def load_model(args, e2w, w2e):
-    print("\nBuilding BERT model")
-    configuration = BertConfig(max_position_embeddings=args.max_seq_len,
-                                position_embedding_type='relative_key_query',
+   print("\nBuilding BERT model")
+   configuration = BertConfig(max_position_embeddings=args.max_seq_len,
+                               position_embedding_type='relative_key_query',
                                 hidden_size=args.hs)
 
     midibert = MidiBert(bertConfig=configuration, e2w=e2w, w2e=w2e)
-    
+
     model = TokenClassification(midibert, 4, args.hs)
-        
-    print('\nLoading ckpt from', args.ckpt)  
+
+    print('\nLoading ckpt from', args.ckpt)
     checkpoint = torch.load(args.ckpt, map_location='cpu')
 
     # remove module
-    #from collections import OrderedDict
-    #new_state_dict = OrderedDict()
-    #for k, v in checkpoint['state_dict'].items():
+    # from collections import OrderedDict
+    # new_state_dict = OrderedDict()
+    # for k, v in checkpoint['state_dict'].items():
     #    name = k[7:]
     #    new_state_dict[name] = v
-    #model.load_state_dict(new_state_dict)
+    # model.load_state_dict(new_state_dict)
     model.load_state_dict(checkpoint['state_dict'])
 
     return model
+
 
 
 def inference(model, tokens, pad_CP, device):
@@ -237,45 +239,45 @@ def events2midi(events, output_path, prompt_path=None):
         for st, bpm in tempos:
             tempo_changes.append(miditoolkit.midi.containers.TempoChange(bpm, st))
         midi.tempo_changes = tempo_changes
-    
-    # write  
+
+    # write
     midi.dump(output_path)
     print(f"predicted melody midi file is saved at {output_path}")
 
-    return 
-
+    return
+'''
 
 def main():
-    args = get_args()
-    with open(args.dict_file, 'rb') as f:
+
+    with open(file_paths.cp_dict, 'rb') as f:
         e2w, w2e = pickle.load(f)
 
     compact_classes = ['Bar', 'Position', 'Pitch', 'Duration']
     pad_CP = [e2w[subclass][f"{subclass} <PAD>"] for subclass in compact_classes]
 
     # preprocess input file
-    CP_model = CP(dict=args.dict_file)
-    events, tokens = CP_model.prepare_data(args.input_path, args.max_seq_len)      # files, task, seq_len
-    filename = args.input_path.split('/')[-1]
-    print(f"'{filename}' is preprocessed to CP repr. with shape {tokens.shape}")
-    
+    #CP_model = CP(file_paths.cp_dict)
+    #events, tokens = CP_model.prepare_data( , 512)      # files, task, seq_len
+    #filename = args.input_path.split('/')[-1]
+    #print(f"'{filename}' is preprocessed to CP repr. with shape {tokens.shape}")
+
     # load pre-trained model
-    model = load_model(args, e2w, w2e)
+    #model = load_model(args, e2w, w2e)
 
     # inference
-    device = torch.device("cuda" if torch.cuda.is_available() and not args.cpu else 'cpu')
-    print("Using", device)
-    predictions = inference(model, tokens, pad_CP, device)
-    print(f"predicted melody shape {predictions.shape}")
+    #device = torch.device("cuda" if torch.cuda.is_available() and not args.cpu else 'cpu')
+    #print("Using", device)
+    #predictions = inference(model, tokens, pad_CP, device)
+    #print(f"predicted melody shape {predictions.shape}")
     #np.save("input.npy", tokens)
     #np.save("pred.npy", predictions)
-  
-    # post-process    
-    melody_events = get_melody_events(events, tokens, predictions, pad_CP, bridge=args.bridge)
-    print(f"Melody Events: {len(melody_events)}/{len(events)}")
+
+    # post-process
+    #melody_events = get_melody_events(events, tokens, predictions, pad_CP, bridge=args.bridge)
+    #print(f"Melody Events: {len(melody_events)}/{len(events)}")
 
     # save melody midi
-    melody_midi = events2midi(melody_events, args.output_path)
+    #melody_midi = events2midi(melody_events, args.output_path)
 
 
 if __name__ == '__main__':
