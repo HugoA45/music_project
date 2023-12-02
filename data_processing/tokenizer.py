@@ -14,9 +14,9 @@ def tokenize_midi(midi_dir, cp_dir):
     ndarray or None: The content of the .npy file as a NumPy array, or None if no file is found.
     """
 
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    script_path = os.path.join(base_dir, 'data_processing', 'preprocess.py')
-
+    #base_dir =
+    #script_path = os.path.join(base_dir, 'data_processing', 'preprocess.py')
+    script_path='/root/code/HugoA45/music_project/music_project/data_processing/preprocess.py'
     # Construct and run the command
     full_command = ["python", script_path, "--input_dir", midi_dir]
     subprocess.run(full_command, check=True)
@@ -30,15 +30,4 @@ def tokenize_midi(midi_dir, cp_dir):
     # If no .npy file is found
     return None
 
-# # Determine the base directory of the project
-# base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# # Construct paths relative to the base directory
-# script_path = os.path.join(base_dir, 'data_processing', 'main.py')
-# input_dir = os.path.join(base_dir, 'Output_Dir')
-# output_dir = os.path.join(base_dir, 'data', 'CP_data', 'tmp')
-# # Execute the function
-# npy_content = tokenize_midi(script_path, input_dir, output_dir)
-# if npy_content is not None:
-#     print("Script executed successfully and .npy file content obtained.")
-# else:
-#     print("No .npy file was found in the output directory.")
+# os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
