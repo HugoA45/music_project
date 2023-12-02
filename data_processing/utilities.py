@@ -26,7 +26,8 @@ class Item(object):
             self.name, self.start, self.end, self.velocity, self.pitch, self.Type)
 
 # read notes and tempo changes from midi (assume there is only one track)
-def read_items(file_path):
+'''def read_items(file_path):
+
     midi_obj = miditoolkit.midi.parser.MidiFile(file_path)
     # note
     note_items = []
@@ -83,6 +84,75 @@ def read_items(file_path):
                 Type=-1))
     tempo_items = output
     return note_items, tempo_items
+'''
+
+
+### TEST
+def read_items(midi_obj):
+    # Note
+    note_items = []
+    num_of_instr = len(midi_obj.instruments)
+
+
+    for i in range(num_of_instr):
+        notes = midi_obj.instruments[i].notes
+        notes.sort(key=lambda x: (x.start, x.pitch))
+
+        for note in notes:
+            note_items.append({
+                'name': 'Note',
+                'start': note.start,
+                'end': note.end,
+                'velocity': note.velocity,
+                'pitch': note.pitch,
+                'Type': i
+            })
+
+
+    note_items.sort(key=lambda x: x['start'])
+
+    # Tempo
+    tempo_items = []
+    for tempo in midi_obj.tempo_changes:
+        tempo_items.append({
+            'name': 'Tempo',
+            'start': tempo.time,
+            'end': None,
+            'velocity': None,
+            'pitch': int(tempo.tempo),
+            'Type': -1
+        })
+
+    tempo_items.sort(key=lambda x: x['start'])
+
+    max_tick = tempo_items[-1]['start']
+    existing_ticks = {item['start']: item['pitch'] for item in tempo_items}
+    wanted_ticks = np.arange(0, max_tick + 1, DEFAULT_RESOLUTION)
+    output = []
+
+    for tick in wanted_ticks:
+        if tick in existing_ticks:
+            output.append({
+                'name': 'Tempo',
+                'start': tick,
+                'end': None,
+                'velocity': None,
+                'pitch': existing_ticks[tick],
+                'Type': -1
+            })
+        else:
+            output.append({
+                'name': 'Tempo',
+                'start': tick,
+                'end': None,
+                'velocity': None,
+                'pitch': output[-1]['pitch'],
+                'Type': -1
+            })
+
+    tempo_items = output
+
+    return note_items, tempo_items
 
 
 class Event(object):
@@ -102,14 +172,14 @@ def item2event(groups, task):
     events = []
     n_downbeat = 0
     for i in range(len(groups)):
-        if 'Note' not in [item.name for item in groups[i][1:-1]]:
+        if 'Note' not in [item['name'] for item in groups[i][1:-1]]:
             continue
         bar_st, bar_et = groups[i][0], groups[i][-1]
         n_downbeat += 1
         new_bar = True
 
         for item in groups[i][1:-1]:
-            if item.name != 'Note':
+            if item['name'] != 'Note':
                 continue
             note_tuple = []
 
@@ -128,19 +198,19 @@ def item2event(groups, task):
 
             # Position
             flags = np.linspace(bar_st, bar_et, DEFAULT_FRACTION, endpoint=False)
-            index = np.argmin(abs(flags-item.start))
+            index = np.argmin(abs(flags-item['start']))
             note_tuple.append(Event(
                 name='Position',
-                time=item.start,
+                time=item['start'],
                 value='{}/{}'.format(index+1, DEFAULT_FRACTION),
-                text='{}'.format(item.start),
+                text='{}'.format(item['start']),
                 Type=-1))
 
             # Pitch
-            velocity_index = np.searchsorted(DEFAULT_VELOCITY_BINS, item.velocity, side='right') - 1
+            velocity_index = np.searchsorted(DEFAULT_VELOCITY_BINS, item['velocity'], side='right') - 1
 
             if task == 'melody':
-                pitchType = item.Type
+                pitchType = item['Type']
             elif task == 'velocity':
                 pitchType = velocity_index
             else:
@@ -148,17 +218,17 @@ def item2event(groups, task):
 
             note_tuple.append(Event(
                 name='Pitch',
-                time=item.start,
-                value=item.pitch,
-                text='{}'.format(item.pitch),
+                time=item['start'],
+                value=item['pitch'],
+                text='{}'.format(item['pitch']),
                 Type=pitchType))
 
             # Duration
-            duration = item.end - item.start
+            duration = item['end'] - item['start']
             index = np.argmin(abs(DEFAULT_DURATION_BINS-duration))
             note_tuple.append(Event(
                 name='Duration',
-                time=item.start,
+                time=item['start'],
                 value=index,
                 text='{}/{}'.format(duration, DEFAULT_DURATION_BINS[index]),
                 Type=-1))
@@ -169,24 +239,27 @@ def item2event(groups, task):
 
 
 def quantize_items(items, ticks=120):
-    grids = np.arange(0, items[-1].start, ticks, dtype=int)
+    grids = np.arange(0, items[-1]['start'], ticks, dtype=int)
     # process
     for item in items:
-        index = np.argmin(abs(grids - item.start))
-        shift = grids[index] - item.start
-        item.start += shift
-        item.end += shift
+        index = np.argmin(abs(grids - item['start']))
+        shift = grids[index] - item['start']
+
+        #item.start += shift
+        item['start'] += shift
+        #item.end += shift
+        item['end'] += shift
     return items
 
 
 def group_items(items, max_time, ticks_per_bar=DEFAULT_RESOLUTION*4):
-    items.sort(key=lambda x: x.start)
+    items.sort(key=lambda x: x['start'])
     downbeats = np.arange(0, max_time+ticks_per_bar, ticks_per_bar)
     groups = []
     for db1, db2 in zip(downbeats[:-1], downbeats[1:]):
         insiders = []
         for item in items:
-            if (item.start >= db1) and (item.start < db2):
+            if (item['start'] >= db1) and (item['start'] < db2):
                 insiders.append(item)
         overall = [db1] + insiders + [db2]
         groups.append(overall)

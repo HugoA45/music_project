@@ -25,7 +25,7 @@ import torch.nn as nn
 from transformers import BertConfig
 import file_paths
 from midi2CP import CP
-from preprocess_utils import DEFAULT_VELOCITY_BINS, DEFAULT_FRACTION, DEFAULT_DURATION_BINS, DEFAULT_TEMPO_INTERVALS, DEFAULT_RESOLUTION
+from data_processing.utilities import DEFAULT_VELOCITY_BINS, DEFAULT_FRACTION, DEFAULT_DURATION_BINS, DEFAULT_TEMPO_INTERVALS, DEFAULT_RESOLUTION
 #from model import MidiBert
 #from MidiBERT.finetune_model import TokenClassification
 
