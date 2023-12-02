@@ -44,34 +44,8 @@ if mp3_file:
 
 st.write(composer)
 
-# # Process the uploaded file from mp3 to CP
-#
-#   cp = <CONVERSION_FUNCTION_PLACEHOLDER>(mp3_file)
-
-
-#     # Predict
-#     ## NOTE 1: CKPT_PATH IS TEMPORARY UNTIL THE CKPT IS ON GCP
-#     if cp:
-#         ckpt = load_checkpoint(ckpt_path)
-#         model = load_model(dict_path, ckpt_path)
-#         prediction = prediction(mp3_file, model, task=None)
-#
-
-#     midi = func_taht_turns_to_midi(mp3)
-
 
 # # Open items - How to
 # #
 # # Fetch model from container (Initiate model)
 # # 4. Generate image (Optional)
-
-# main.py
-
-# def mp3_to_composer(mp3):
-#     midi = mp3_to_midi(mp3)
-#     cp = midi_to_cp(midi)
-
-#     if cp:
-#     ckpt = load_checkpoint(ckpt_path)
-#     model = load_model(dict_path, ckpt_path)
-#     prediction = prediction(cpxs, model, task=None)
