@@ -162,3 +162,4 @@ cython_debug/
 
 resources/pretrain_model.ckpt
 .DS_Store
+resources/composer_best.ckpt
