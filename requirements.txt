@@ -1,6 +1,6 @@
-os
+#os
 subprocess
 transformers
 pickle
 torch
-basic-pitch
+streamlit
