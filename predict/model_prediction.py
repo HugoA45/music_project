@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import pandas as pd
+import numpy as np
 
 def prediction(data, model, task='composer_classification'):
 
@@ -27,4 +28,16 @@ def prediction(data, model, task='composer_classification'):
         predicted_samples = pd.Series(predicted_samples)
         predicted_samples.value_counts()/len(predicted_samples)
 
-        return predicted_samples
+        #return predicted_samples
+
+
+        outputs = []
+        for i, etype in enumerate(model.e2w):
+            print(type(res[i]))
+            output = np.argmax(res[i].detach(), axis=-1)
+            outputs.append(output)
+        predicted_class = np.stack(outputs, axis=-1)
+        #predicted_samples = [composer_names[idx.item()] for idx in predicted_class]
+        #predicted_samples = pd.Series(predicted_samples)
+        #predicted_samples.value_counts()/len(predicted_samples)
+        return predicted_class
