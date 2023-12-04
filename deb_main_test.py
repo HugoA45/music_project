@@ -19,6 +19,11 @@ from predict.model_prediction import prediction
 import file_paths
 import pickle
 
+
+#dict_path = file_paths.cp_dict
+#ckpt_path = file_paths.pretrain_ckpt
+#cp_dir = file_paths.cp_dir
+
 current_directory = os.path.dirname(os.path.abspath(__file__))
 dict_path = os.path.join(current_directory, 'resources', 'CP.pkl')
 ckpt_path = os.path.join(current_directory, 'resources', 'pretrain_model.ckpt')
