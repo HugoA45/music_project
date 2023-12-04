@@ -162,3 +162,5 @@ cython_debug/
 
 resources/pretrain_model.ckpt
 .DS_Store
+file.mp3
+resources/composer_best.ckpt
