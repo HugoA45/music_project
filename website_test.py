@@ -7,11 +7,10 @@ UNTIL CKPT IS ON CLOUD, THIS CAN CURRENTLY ONLY BE RUN LOCALLY
 # 1. Import packages
 # 1.1 Python packages
 
-#import streamlit as st
-#import numpy as np
-#import pandas as pd
-#import time
-
+import streamlit as st
+import numpy as np
+import pandas as pd
+import time
 
 
 # 1.2 Model Tasks
