@@ -1,6 +1,9 @@
-os
-subprocess
+# os
+# subprocess
 transformers
 pickle
 torch
-basic-pitch
+# basic-pitch
+
+# to be determined
+# miditoolkit
