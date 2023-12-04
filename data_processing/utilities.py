@@ -26,68 +26,6 @@ class Item(object):
             self.name, self.start, self.end, self.velocity, self.pitch, self.Type)
 
 # read notes and tempo changes from midi (assume there is only one track)
-'''def read_items(file_path):
-
-    midi_obj = miditoolkit.midi.parser.MidiFile(file_path)
-    # note
-    note_items = []
-    num_of_instr = len(midi_obj.instruments)
-
-    for i in range(num_of_instr):
-        notes = midi_obj.instruments[i].notes
-        notes.sort(key=lambda x: (x.start, x.pitch))
-
-        for note in notes:
-            note_items.append(Item(
-                name='Note',
-                start=note.start,
-                end=note.end,
-                velocity=note.velocity,
-                pitch=note.pitch,
-                Type=i))
-
-    note_items.sort(key=lambda x: x.start)
-
-    # tempo
-    tempo_items = []
-    for tempo in midi_obj.tempo_changes:
-        tempo_items.append(Item(
-            name='Tempo',
-            start=tempo.time,
-            end=None,
-            velocity=None,
-            pitch=int(tempo.tempo),
-            Type=-1))
-    tempo_items.sort(key=lambda x: x.start)
-
-    # expand to all beat
-    max_tick = tempo_items[-1].start
-    existing_ticks = {item.start: item.pitch for item in tempo_items}
-    wanted_ticks = np.arange(0, max_tick+1, DEFAULT_RESOLUTION)
-    output = []
-    for tick in wanted_ticks:
-        if tick in existing_ticks:
-            output.append(Item(
-                name='Tempo',
-                start=tick,
-                end=None,
-                velocity=None,
-                pitch=existing_ticks[tick],
-                Type=-1))
-        else:
-            output.append(Item(
-                name='Tempo',
-                start=tick,
-                end=None,
-                velocity=None,
-                pitch=output[-1].pitch,
-                Type=-1))
-    tempo_items = output
-    return note_items, tempo_items
-'''
-
-
-### TEST
 def read_items(midi_obj):
     # Note
     note_items = []
@@ -113,6 +51,7 @@ def read_items(midi_obj):
 
     # Tempo
     tempo_items = []
+
     for tempo in midi_obj.tempo_changes:
         tempo_items.append({
             'name': 'Tempo',
