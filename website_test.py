@@ -33,26 +33,34 @@ composer = None
 # 2.1 Load MP3
 input_file = st.file_uploader("Upload an MP3 file", type=["mp3"]) # The st.file_uploader function returns a BytesIO object for the uploaded file.
 
-# 2.2 run input_file thru main function to predict composer
 if input_file is not None:
-    with open("file.mp3", "wb") as f:
-        f.write(input_file.getbuffer())
-    # Process the input_file as needed for your main() function
-    # 2.2 Run prediction
-    composer = pd.DataFrame(main("file.mp3")).reset_index()
-    composer.columns = ["Composer", "Prediction"]
+    import requests
+    url = " http://127.0.0.1:8000"
 
-if composer is not None:
-    for i, row in composer.iterrows():
-        if row is not None:
-            image_path = "/Users/d.haverkort/code/HugoA45/music_project/music_project/temp/bethel_church.png"
+    files = {'file': input_file}
+    response = requests.post(url,files=files).json()
+    st.write(response)
 
-            st.image(image_path, caption={row["Composer"]}, use_column_width=True)
+# 2.2 run input_file thru main function to predict composer
+# if input_file is not None:
+#     with open("file.mp3", "wb") as f:
+#         f.write(input_file.getbuffer())
+#     # Process the input_file as needed for your main() function
+#     # 2.2 Run prediction
+#     composer = pd.DataFrame(main("file.mp3")).reset_index()
+#     composer.columns = ["Composer", "Prediction"]
 
-    for i, row in composer.iterrows():
-        if i == 0:
-            typewriter(f'I think the composer is {row["Composer"]}')
-        else:
-            typewriter(f'But it could alse be {row["Composer"]}')
-else:
-    st.write("Composer not found or input file not provided.")
+# if composer is not None:
+#     for i, row in composer.iterrows():
+#         if row is not None:
+#             image_path = "/Users/d.haverkort/code/HugoA45/music_project/music_project/temp/bethel_church.png"
+
+#             st.image(image_path, caption={row["Composer"]}, use_column_width=True)
+
+#     for i, row in composer.iterrows():
+#         if i == 0:
+#             typewriter(f'I think the composer is {row["Composer"]}')
+#         else:
+#             typewriter(f'But it could alse be {row["Composer"]}')
+# else:
+#     st.write("Composer not found or input file not provided.")

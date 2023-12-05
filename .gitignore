@@ -169,3 +169,4 @@ resources/composer_best.ckpt:Zone.Identifier
 resources/model_best.ckpt
 resources/model_best.ckpt:Zone.Identifier
 *.mp3
+.python-version
