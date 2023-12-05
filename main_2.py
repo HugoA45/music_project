@@ -11,6 +11,8 @@ from basic_pitch_module.basic_pitch.inference import predict
 from finetune.finetune_model import SequenceClassification
 from predict.predict import tuned_predicton
 from data_processing.midi2CP import CP
+from download_checkpoints import download_checkpoint_as_file_object
+
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 dict_path = os.path.join(current_directory, 'resources', 'CP.pkl')
@@ -39,14 +41,18 @@ def load_bert_model(dict_path):
 
 def load_checkpoint(model_stage):
     if model_stage == 'pre_trained':
-        ckpt_path = os.path.join(current_directory, 'resources', 'pretrain_model.ckpt')
-        checkpoint = torch.load(ckpt_path, map_location='cpu')
-        return checkpoint
+        ckpt_name = 'pretrain_model.ckpt'
+    elif model_stage == 'fine_tuned':
+        ckpt_name = 'model_best.ckpt'
+    else:
+        raise "model_stage should be 'pre_trained' or 'fine_tuned'"
 
-    if model_stage == 'fine_tuned':
-        ckpt_path = os.path.join(current_directory, 'resources', 'composer_best.ckpt')
-        checkpoint = torch.load(ckpt_path, map_location='cpu')
-        return checkpoint
+    ckpt_path = os.path.join(current_directory, 'resources', ckpt_name)
+    if not os.path.isfile(ckpt_path):
+        print("\n---- File not found, downloading from bucket -----\n")
+        download_checkpoint_as_file_object('music_project_bucket', ckpt_name)
+    checkpoint = torch.load(ckpt_path, map_location='cpu')
+    return checkpoint
 
 def load_mp3(mp3_file_path):
     midi_data = predict(mp3_file_path)[1]

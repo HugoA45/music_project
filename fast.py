@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile
 from main_2 import main
 
+
 app = FastAPI()
 
 # Define a root `/` endpoint

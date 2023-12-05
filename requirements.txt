@@ -22,3 +22,7 @@ basic_pitch
 fastapi
 uvicorn
 python-multipart
+
+google-cloud
+google-api-python-client
+google-cloud-storage
