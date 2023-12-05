@@ -161,9 +161,10 @@ cython_debug/
 
 
 resources/pretrain_model.ckpt
-.DS_Store
+*.DS_Store
 file.mp3
 resources/composer_best.ckpt
 resources/composer_best.ckpt:Zone.Identifier
 resources/model_best.ckpt
 resources/model_best.ckpt:Zone.Identifier
+*.mp3
