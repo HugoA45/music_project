@@ -1,6 +1,20 @@
-os
-subprocess
-transformers
-pickle
+# os
+# subprocess
+# pickle
+# basic-pitch
+
+# to be determined
+
+pandas
+numpy
+
 torch
-basic-pitch
+tensorflow
+transformers
+
+streamlit
+
+miditoolkit
+librosa
+pretty_midi
+basic_pitch
