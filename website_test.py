@@ -14,9 +14,11 @@ import time
 
 
 # 1.2 Model Tasks
-from deb_main_test import main # UPDATE TO MAIN
+from main_2 import main # UPDATE TO MAIN
 
+# 2. Website
 
+# 2.1 Website Function: typewriter
 def typewriter(text: str, speed=10):
     tokens = text.split()
     container = st.empty()
@@ -25,30 +27,54 @@ def typewriter(text: str, speed=10):
         container.markdown(curr_full_text)
         time.sleep(1 / speed)
 
-# 2. Website
-st.markdown("""# FEED ME MUSIC""")
+
+ # 2.2 Website Layout: banner & header
+st.markdown("""
+<style>
+.banner {
+  background: #000000;
+  color: white;
+  padding: 10px;
+  position: relative;
+  text-align: center;
+  border-radius: 10px;
+  max-height: 400px;  /* Set the maximum height of the banner */
+  overflow: hidden;  /* Hide the excess part of the image */
+}
+</style>
+
+<div class="banner">
+  <h1>TuneScout</h1>
+  <img src="https://via.placeholder.com/150" "">
+  <p>For the audiophiles,<br>the musical nomads,<br>the ones who never heard enough</p>
+</div>
+""", unsafe_allow_html=True)
+
+# banner_image = "resources/Images of Composers/bethel_church.png"  # Replace with image URL
+# st.image(banner_image, use_column_width=True)
+
+# st.markdown("""# FEED ME MUSIC""")
+
+
+
+# 2.1 Load MP3
+input_file = st.file_uploader('',type=["mp3"]) # The st.file_uploader function returns a BytesIO object for the uploaded file.
 
 composer = None
 
-# 2.1 Load MP3
-input_file = st.file_uploader("Upload an MP3 file", type=["mp3"]) # The st.file_uploader function returns a BytesIO object for the uploaded file.
-
 if input_file is not None:
     import requests
-    url = " http://127.0.0.1:8000"
-
+    url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
     files = {'file': input_file}
     response = requests.post(url,files=files).json()
-    st.write(response)
+    for i, (composer, percentage) in enumerate(response.items()): #ensure correct output
+        if i == 0:
+            typewriter(f'I think the composer is {composer}')
+        else:
+            typewriter(f'But it could alse be {composer}')
+
 
 # 2.2 run input_file thru main function to predict composer
-# if input_file is not None:
-#     with open("file.mp3", "wb") as f:
-#         f.write(input_file.getbuffer())
-#     # Process the input_file as needed for your main() function
-#     # 2.2 Run prediction
-#     composer = pd.DataFrame(main("file.mp3")).reset_index()
-#     composer.columns = ["Composer", "Prediction"]
 
 # if composer is not None:
 #     for i, row in composer.iterrows():
