@@ -50,7 +50,7 @@ def load_checkpoint(model_stage):
     ckpt_path = os.path.join(current_directory, 'resources', ckpt_name)
     if not os.path.isfile(ckpt_path):
         print("\n---- File not found, downloading from bucket -----\n")
-        download_checkpoint_as_file_object('music_project_bucket', ckpt_name)
+        download_checkpoint_as_file_object('music_project_bucket', ckpt_name, ckpt_path)
     checkpoint = torch.load(ckpt_path, map_location='cpu')
     return checkpoint
 

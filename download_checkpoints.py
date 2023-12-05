@@ -1,7 +1,7 @@
 from google.cloud import storage
 import io
 
-def download_checkpoint_as_file_object(bucket_name, checkpoint_file_name):
+def download_checkpoint_as_file_object(bucket_name, checkpoint_file_name,path):
     """Download a checkpoint file from Google Cloud Storage and return it as a file object.
 
     Args:
@@ -16,14 +16,14 @@ def download_checkpoint_as_file_object(bucket_name, checkpoint_file_name):
     bucket = client.bucket(bucket_name)
 
     blob = bucket.blob(checkpoint_file_name)
-    blob.download_to_filename(checkpoint_file_name)
+    blob.download_to_filename(path)
 
     print(f"Downloaded {checkpoint_file_name}.")
 
 
 if __name__ == "__main__":
-    model_best_file = download_checkpoint_as_file_object('music_project_bucket', 'model_best.ckpt')
-    pretrain_model_file = download_checkpoint_as_file_object('music_project_bucket', 'pretrain_model.ckpt')
+    model_best_file = download_checkpoint_as_file_object('music_project_bucket', 'model_best.ckpt', 'model_best.ckpt')
+    pretrain_model_file = download_checkpoint_as_file_object('music_project_bucket', 'pretrain_model.ckpt', 'pretrain_model.ckpt')
 
 
 
