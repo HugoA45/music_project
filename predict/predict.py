@@ -25,12 +25,9 @@ def tuned_predicton(midibert, tokens, checkpoint):
     res = [composer_names[idx.item()] for idx in output]
 
     unique_values, counts = np.unique(res, return_counts=True)
-
-    # Normalize counts
     normalized_counts = counts / len(res)
-
-    # Create a dictionary with composer names as keys and their normalized counts as values
     res_dict = dict(zip(unique_values, normalized_counts))
     print(res_dict)
 
-    return res_dict
+    #return res_dict
+    return output
