@@ -18,3 +18,7 @@ miditoolkit
 librosa
 pretty_midi
 basic_pitch
+
+fastapi
+uvicorn
+python-multipart

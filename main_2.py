@@ -14,7 +14,6 @@ from data_processing.midi2CP import CP
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 dict_path = os.path.join(current_directory, 'resources', 'CP.pkl')
-music_file = os.path.join(current_directory,'temp/test/sakamoto1.mp3')
 
 model_stage = 'fine_tuned'
 
@@ -73,5 +72,3 @@ def main(music_file, model_stage):
     output = tuned_predicton(midibert, tokens, checkpoint)
 
     return output
-
-main(music_file, model_stage)
