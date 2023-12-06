@@ -1,7 +1,6 @@
 
 '''
 Streamlit function
-UNTIL CKPT IS ON CLOUD, THIS CAN CURRENTLY ONLY BE RUN LOCALLY
 '''
 
 # 1. Import packages
@@ -46,7 +45,7 @@ st.markdown("""
 <div class="banner">
   <h1>TuneScout</h1>
   <img src="https://via.placeholder.com/150" "">
-  <p>For the audiophiles,<br>the musical nomads,<br>the ones who never heard enough</p>
+  <p>For the audiophiles,<br>the minstrels of melody,<br>the ones that never heard enough</p>
 </div>
 """, unsafe_allow_html=True)
 
