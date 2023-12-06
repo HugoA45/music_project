@@ -112,21 +112,32 @@ st.markdown("""
 # 2.3 Load MP3
 input_file = st.file_uploader('',type=["mp3"]) # The st.file_uploader function returns a BytesIO object for the uploaded file.
 
-# 2.4 Create buttons
+if input_file is not None:
+    with st.spinner('Processing the mp3 file...'):
+        import requests
+        url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
+        files = {'file': input_file}
+        response = requests.post(url,files=files).json()
+
+# making layout of the prediction
+        # response = example_prediction
+        top_composer = max(response.items(), key=lambda x: x[1])[0]
+
+# 2.4 Buttons
 col1, col2, col3 = st.columns(3, )
 
-custom_css = """
-    <style>
-        .custom-button {
-            width: 100%; /* Set the desired width here */
-        }
-    </style>
-"""
-st.markdown(custom_css, unsafe_allow_html=True)
+    # Button lay-out
+# custom_css = """
+#     <style>
+#         .custom-button {
+#             width: 100%; /* Set the desired width here */
+#         }
+#     </style>
+# """
+# st.markdown(custom_css, unsafe_allow_html=True)
 
 # Button 1: Suggest
 if col1.button('Suggest'):
-    response = example_prediction
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
     ax.set_title('Similarity of artists')
@@ -142,22 +153,7 @@ if col1.button('Suggest'):
 # Button 2: Inspire me
 if col2.button('Inspire me'):
     st.write("Composer suggestions (chatgpt input) printed here!")
-    if True:
-        response = example_prediction
-        top_composer = max(response.items(), key=lambda x: x[1])[0]
 
-        #artist title
-        st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
-        #artist image
-        composer_image = composer_image_dict[top_composer]
-        st.image(composer_image, use_column_width=True)
-        #artist info text
-        st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
-
-
-
-# Button 3: Info
-if col3.button('Info'):
     client = OpenAI()
     top_composer = max(response.items(), key = lambda x: x[1])[0]
     completion = client.chat.completions.create(
@@ -181,17 +177,22 @@ if col3.button('Info'):
 
 
 
-#if input_file is not None:
-# if True:
-    # with st.spinner('Processing the mp3 file...'):
-        #import requests
-        #url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
-        #files = {'file': input_file}
-        #response = requests.post(url,files=files).json()
+# Button 3: Info
+if col3.button('Info'):
+    if True:
+        top_composer = max(response.items(), key=lambda x: x[1])[0]
 
-        #making layout of the prediction
-        # response = example_prediction
-        # top_composer = max(response.items(), key=lambda x: x[1])[0]
+        #artist title
+        st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
+        #artist image
+        composer_image = composer_image_dict[top_composer]
+        st.image(composer_image, use_column_width=True)
+        #artist info text
+        st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
+
+
+
+
 
         # #artist title
         # st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
