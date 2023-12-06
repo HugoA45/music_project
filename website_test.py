@@ -134,19 +134,19 @@ if input_file is not None:
         completion = client.chat.completions.create(
             model="gpt-4",
             messages=[
-                {
-                    "role": "system",
-                    "content": "You are an informative and helpful assistant, skilled in explaining recommendations for composers in music."
-                },
-                {
-                    "role": "user",
-                    "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
-                },
-                {
-                    "role": "user",
-                    "content": f"We have a composer that was predicted by a model which is {top_composer}. We want you to give recommendation similar artists. No description of {top_composer} but rather only the ones that are similar and why. we dont need the a introduction on the {top_composer}. just create the list of 4 similar composers. give me 3 songs for each artist afterwards"
-                }
-            ]
+            {
+                "role": "system",
+                "content": "You are an informative and helpful assistant, skilled in explaining recommendations for composers in music."
+            },
+            {
+                "role": "user",
+                "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
+            },
+            {
+                "role": "user",
+                "content": f"We have a composer that was predicted by a model which is {top_composer}. We want you to give recommendation similar artists. No description of {top_composer} but rather only the ones that are similar and why. we dont need the a introduction on the {top_composer}. Please provide the information in the following format: \n\n1. Artist Name: \n   - Reason for similarity: \n   - Song 1: \n   - Song 2: \n   - Song 3: \n\nRepeat this for four artists."
+            }
+        ]
         )
         st.write(completion.choices[0].message.content)
 
