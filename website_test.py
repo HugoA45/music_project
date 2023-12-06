@@ -110,7 +110,7 @@ if input_file is not None:
             response = st.session_state['mp3_response']
 
     # 2.4 Buttons
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
 
     # Button 1: Suggest
     if col1.button('Artist similarity'):
@@ -152,13 +152,15 @@ if input_file is not None:
 
     # Button 3: Info
     if col3.button('Top Artist Information'):
-        if True:
-            top_composer = max(response.items(), key=lambda x: x[1])[0]
+        top_composer = max(response.items(), key=lambda x: x[1])[0]
 
-            #artist title
-            st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
-            #artist image
-            composer_image = composer_image_dict[top_composer]
-            st.image(composer_image, use_column_width=True)
-            #artist info text
-            st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
+        #artist title
+        st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
+        #artist image
+        composer_image = composer_image_dict[top_composer]
+        st.image(composer_image, use_column_width=True)
+        #artist info text
+        st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
+
+    if col4.button('Input another file'):
+        st.session_state['mp3_response'] = None
