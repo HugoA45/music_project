@@ -117,22 +117,8 @@ if input_file is not None:
         import requests
         url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
         files = {'file': input_file}
-        #response = requests.post(url,files=files).json()
+        response = requests.post(url,files=files).json()
 
-# making layout of the prediction
-response = example_prediction
-        # top_composer = max(response.items(), key=lambda x: x[1])[0]
-
-
-    # Button lay-out
-# custom_css = """
-#     <style>
-#         .custom-button {
-#             width: 100%; /* Set the desired width here */
-#         }
-#     </style>
-# """
-# st.markdown(custom_css, unsafe_allow_html=True)
 
 # 2.4 Buttons
 col1, col2, col3 = st.columns(3)
