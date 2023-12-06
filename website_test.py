@@ -127,9 +127,11 @@ if input_file is not None:
 
     # Button 2: Inspire me
     if col2.button('Recomendation for Similar Artits'):
-        composer_index = st.slider('Select a artist:', 0, len(response.keys())-1, 0)
-        selected_composer = response[composer_index]
+        composers = sorted(response.keys())
+        composer_index = st.slider('Select a artist:', 0, len(composers)-1, 0)
+        selected_composer = composers[composer_index]
         st.write(f"You selected: {selected_composer}")
+
         st.write("\nHere are some artist recomendations based on the mp3 file that you selected!")
         api_key = st.secrets["openai"]["api_key"]
         client = openai.OpenAI(api_key=api_key)
