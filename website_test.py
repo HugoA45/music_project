@@ -144,7 +144,7 @@ if input_file is not None:
                 },
                 {
                     "role": "user",
-                    "content": f"we have a composer that was predicted by a model which is {top_composer}.and we want you to give recommendation for similar artists. dont describe the composer but rather only the ones that are similar and why. we dont need the first introduction on the {top_composer}. just create the list of 4 similar composers. give me 3 songs for each artist afterwards"
+                    "content": f"We have a composer that was predicted by a model which is {top_composer}. We want you to give recommendation similar artists. No description of {top_composer} but rather only the ones that are similar and why. we dont need the a introduction on the {top_composer}. just create the list of 4 similar composers. give me 3 songs for each artist afterwards"
                 }
             ]
         )
