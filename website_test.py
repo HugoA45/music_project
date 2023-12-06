@@ -93,6 +93,9 @@ st.markdown("""
 if 'mp3_response' not in st.session_state:
     st.session_state['mp3_response'] = None
 
+if 'artist_response' not in st.session_state:
+    st.session_state['artist_response'] = None
+
 # 2.3 Load MP3
 input_file = st.file_uploader('',type=["mp3"]) # The st.file_uploader function returns a BytesIO object for the uploaded file.
 
@@ -123,7 +126,7 @@ if input_file is not None:
         st.pyplot(fig)
 
     # Button 2: Inspire me
-    if col2.button('Check Similar Artits'):
+    if col2.button('Recomendation for Similar Artits'):
         st.write("Here are some artist recomendations based on the mp3 file that you selected!")
         api_key = st.secrets["openai"]["api_key"]
         client = openai.OpenAI(api_key=api_key)
@@ -141,14 +144,14 @@ if input_file is not None:
                 },
                 {
                     "role": "user",
-                    "content": f"we have a composer that was predicted by a model which is {top_composer}.and we want you to give recommendation for similar artists. dont describe the composer but rather only the ones that are similar and why. we dont need the first introduction on the {top_composer}. just create the list of 4 similar composers"
+                    "content": f"we have a composer that was predicted by a model which is {top_composer}.and we want you to give recommendation for similar artists. dont describe the composer but rather only the ones that are similar and why. we dont need the first introduction on the {top_composer}. just create the list of 4 similar composers. give me 3 songs for each artist afterwards"
                 }
             ]
         )
         st.write(completion.choices[0].message.content)
 
     # Button 3: Info
-    if col3.button('Top Artist Information:'):
+    if col3.button('Top Artist Information'):
         if True:
             top_composer = max(response.items(), key=lambda x: x[1])[0]
 
