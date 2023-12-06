@@ -135,7 +135,7 @@ if input_file is not None:
         st.write("\nHere are some artist recomendations based on the mp3 file that you selected!")
         api_key = st.secrets["openai"]["api_key"]
         client = openai.OpenAI(api_key=api_key)
-        top_composer = max(response.items(), key = lambda x: x[1])[0]
+        composer = selected_composer
         completion = client.chat.completions.create(
             model="gpt-4",
             messages=[
@@ -149,11 +149,11 @@ if input_file is not None:
             },
             {
                 "role": "user",
-                "content": f"We have a composer that was predicted by a model which is {top_composer}. \
+                "content": f"We have a composer that was predicted by a model which is {composer}. \
                                 We want you to give recommendation similar artists - Artist Name. \
                                 We want 3 song recomendation for each artist. \
-                                No description of {top_composer} but rather only the ones that are similar and why. \
-                                we dont need the a introduction on the {top_composer}.\
+                                No description of {composer} but rather only the ones that are similar and why. \
+                                we dont need the a introduction on the {composer}.\
                                 Please provide the information in the following format:\
                                 \n\n1. Artist Name\
                                 \n   - Reason for similarity:\
