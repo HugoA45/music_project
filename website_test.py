@@ -128,8 +128,14 @@ if input_file is not None:
     # Button 2: Inspire me
     if col2.button('Recomendation for Similar Artits'):
         composers = sorted(response.keys())
-        composer_index = st.slider('Select a artist:', 0, len(composers)-1, 0)
-        selected_composer = composers[composer_index]
+
+        # Check if 'composer_index' is in the session state
+        if 'composer_index' not in st.session_state:
+            st.session_state['composer_index'] = 0
+
+        # Use the session state value for the slider
+        st.session_state['composer_index'] = st.slider('Select a artist:', 0, len(composers)-1, st.session_state['composer_index'])
+        selected_composer = composers[st.session_state['composer_index']]
         st.write(f"You selected: {selected_composer}")
 
         st.write("\nHere are some artist recomendations based on the mp3 file that you selected!")
