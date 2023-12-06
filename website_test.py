@@ -13,6 +13,7 @@ import pandas as pd
 import time
 import openai
 import matplotlib.pyplot as plt
+import requests
 
 
 # 1.2 Model Tasks
@@ -89,16 +90,20 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+if 'mp3_response' not in st.session_state:
+    st.session_state['mp3_response'] = None
 
 # 2.3 Load MP3
 input_file = st.file_uploader('',type=["mp3"]) # The st.file_uploader function returns a BytesIO object for the uploaded file.
 
 if input_file is not None:
-    with st.spinner('Processing the mp3 file...'):
-        import requests
-        url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
-        files = {'file': input_file}
-        response = requests.post(url,files=files).json()
+    if st.session_state['mp3_response'] is None:
+        with st.spinner('Processing the mp3 file...'):
+            url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
+            files = {'file': input_file}
+            response = requests.post(url,files=files).json()
+    else:
+            response = st.session_state['mp3_response']
 
     # 2.4 Buttons
     col1, col2, col3 = st.columns(3)
