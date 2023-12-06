@@ -145,7 +145,7 @@ if input_file is not None:
             {
                 "role": "user",
                 "content": f"We have a composer that was predicted by a model which is {top_composer}. \
-                                We want you to give recommendation similar artists. \
+                                We want you to give recommendation similar artists - Artist Name. \
                                 We want 3 song recomendation for each artist. \
                                 No description of {top_composer} but rather only the ones that are similar and why. \
                                 we dont need the a introduction on the {top_composer}.\
