@@ -102,6 +102,7 @@ if input_file is not None:
             url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
             files = {'file': input_file}
             response = requests.post(url,files=files).json()
+            st.session_state['mp3_response'] = response
     else:
             response = st.session_state['mp3_response']
 
