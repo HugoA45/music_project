@@ -170,3 +170,4 @@ resources/model_best.ckpt
 resources/model_best.ckpt:Zone.Identifier
 *.mp3
 .python-version
+.streamlit/secrets.toml
