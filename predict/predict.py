@@ -4,14 +4,14 @@ from finetune.finetune_model import SequenceClassification
 
 def tuned_predicton(midibert, tokens, checkpoint):
 
-    composer_names = ['Bethel Music (Religious)',
+    composer_names = ['Bethel Music',
                           'Richard Clayderman',
                           'Ludovico Einaudy',
                           'Herbie Hancock',
-                          'Hillsong Worship (Religious)',
-                          'Joe Hisaishi (Contemporary)',
-                          'Ryuichy Sakamoto (Contemporary)',
-                          'Yiruma (pop)']
+                          'Hillsong Worship',
+                          'Joe Hisaishi',
+                          'Ryuichy Sakamoto',
+                          'Yiruma']
 
     classification_model = SequenceClassification(midibert, 8, 768)
     classification_model.load_state_dict(checkpoint['state_dict'])
