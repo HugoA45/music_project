@@ -150,7 +150,7 @@ if input_file is not None:
                                 No description of {top_composer} but rather only the ones that are similar and why. \
                                 we dont need the a introduction on the {top_composer}.\
                                 Please provide the information in the following format:\
-                                \n\n1. Artist Name:\
+                                \n\n1. Artist Name\
                                 \n   - Reason for similarity:\
                                 \n   - Song recomendation for Artist Name:\
                                 \n\nRepeat this for four artists."\
