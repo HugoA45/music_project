@@ -53,25 +53,6 @@ example_prediction = {  'Bethel Music': 0.8,
                         'Ludovico Einaudy': 0.1}
 
 
-# 1.3 Graph functionility
-# def similarity_graph(response):
-#     plt.figure(figsize=(10, 6))
-#     plt.bar(example_prediction.keys(), example_prediction.values(), color=['skyblue', 'orange', 'green'])
-#     plt.title('Similarity of artists')
-#     plt.yticks([0.2, 0.6, 0.8], ['low', 'medium', 'high'])
-#     plt.show()
-
-# def similarity_graph(response):
-#     plt.figure(figsize=(10, 6))
-#     plt.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
-#     plt.title('Similarity of artists')
-#     plt.yticks([0.2, 0.6, 0.8], ['low', 'medium', 'high'])
-#     plt.xlabel('Artists')
-#     plt.ylabel('Similarity Score')
-#     st.pyplot(plt)
-
-
-
 # 2. Website
 
 # 2.1 Website Function: typewriter - slow down typing speed
@@ -123,7 +104,7 @@ if input_file is not None:
     col1, col2, col3 = st.columns(3)
 
     # Button 1: Suggest
-    if col1.button('Suggest'):
+    if col1.button('Artist similarity'):
         fig, ax = plt.subplots(figsize=(10, 6))
         ax.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
         ax.set_title('Similarity of artists')
@@ -136,7 +117,7 @@ if input_file is not None:
         st.pyplot(fig)
 
     # Button 2: Inspire me
-    if col2.button('Inspire me'):
+    if col2.button('Check Similar Artits'):
         st.write("Here are some artist recomendations based on the mp3 file that you selected!")
         api_key = st.secrets["openai"]["api_key"]
         client = openai.OpenAI(api_key=api_key)
@@ -158,11 +139,10 @@ if input_file is not None:
                 }
             ]
         )
-
         st.write(completion.choices[0].message.content)
 
     # Button 3: Info
-    if col3.button('Info'):
+    if col3.button('Top Artist Information:'):
         if True:
             top_composer = max(response.items(), key=lambda x: x[1])[0]
 
