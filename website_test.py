@@ -146,12 +146,13 @@ if input_file is not None:
                 "role": "user",
                 "content": f"We have a composer that was predicted by a model which is {top_composer}. \
                                 We want you to give recommendation similar artists. \
+                                We want 3 song recomendation for each artist. \
                                 No description of {top_composer} but rather only the ones that are similar and why. \
                                 we dont need the a introduction on the {top_composer}.\
                                 Please provide the information in the following format:\
                                 \n\n1. Artist Name:\
                                 \n   - Reason for similarity:\
-                                \n   - List of 3 songs:\
+                                \n   - Song recomendation for Artist Name:\
                                 \n\nRepeat this for four artists."\
             }
         ]
