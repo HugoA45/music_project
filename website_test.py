@@ -11,55 +11,14 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import time
+from openai import OpenAI
+import matplotlib.pyplot as plt
 
 
 # 1.2 Model Tasks
 from main_2 import main # UPDATE TO MAIN
 
-# 2. Website
-
-# 2.1 Website Function: typewriter
-def typewriter(text: str, speed=10):
-    tokens = text.split()
-    container = st.empty()
-    for index in range(len(tokens) + 1):
-        curr_full_text = " ".join(tokens[:index])
-        container.markdown(curr_full_text)
-        time.sleep(1 / speed)
-
-
- # 2.2 Website Layout: banner & header
-st.markdown("""
-<style>
-.banner {
-  background: #000000;
-  color: white;
-  padding: 10px;
-  position: relative;
-  text-align: center;
-  border-radius: 10px;
-  max-height: 400px;  /* Set the maximum height of the banner */
-  overflow: hidden;  /* Hide the excess part of the image */
-}
-</style>
-
-<div class="banner">
-  <h1>TuneScout</h1>
-  <img src="https://via.placeholder.com/150" "">
-  <p>For the audiophiles,<br>the musical nomads,<br>the ones who never heard enough</p>
-</div>
-""", unsafe_allow_html=True)
-
-# banner_image = "resources/Images of Composers/bethel_church.png"  # Replace with image URL
-# st.image(banner_image, use_column_width=True)
-
-# st.markdown("""# FEED ME MUSIC""")
-
-
-
-# 2.1 Load MP3
-input_file = st.file_uploader('',type=["mp3"]) # The st.file_uploader function returns a BytesIO object for the uploaded file.
-
+# 1.2 Input dictionaries
 composer_info_dict = {
                         'Bethel Music': ' Formed in 2001, Bethel Music emerged from Bethel Church in California, specializes in contemporary Christian and worship music. Their style is characterized by modern, dynamic worship songs that blend pop and rock elements with religious themes.',
                         'Richard Clayderman' : 'French pianist Richard Clayderman (born 1953), known for his melodic and romantic style, is a leading figure in new age and pop-classical music. His renditions often feature a blend of popular songs, movie soundtracks, and classical pieces.',
@@ -93,15 +52,97 @@ example_prediction = {  'Bethel Music': 0.8,
                         'Richard Clayderman' : 0.1,
                         'Ludovico Einaudy': 0.1}
 
-#if input_file is not None:
-if True:
-    #with st.spinner('Processing the mp3 file...'):
-        #import requests
-        #url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
-        #files = {'file': input_file}
-        #response = requests.post(url,files=files).json()
 
-        #making layout of the prediction
+# 1.3 Graph functionility
+# def similarity_graph(response):
+#     plt.figure(figsize=(10, 6))
+#     plt.bar(example_prediction.keys(), example_prediction.values(), color=['skyblue', 'orange', 'green'])
+#     plt.title('Similarity of artists')
+#     plt.yticks([0.2, 0.6, 0.8], ['low', 'medium', 'high'])
+#     plt.show()
+
+# def similarity_graph(response):
+#     plt.figure(figsize=(10, 6))
+#     plt.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
+#     plt.title('Similarity of artists')
+#     plt.yticks([0.2, 0.6, 0.8], ['low', 'medium', 'high'])
+#     plt.xlabel('Artists')
+#     plt.ylabel('Similarity Score')
+#     st.pyplot(plt)
+
+
+
+# 2. Website
+
+# 2.1 Website Function: typewriter - slow down typing speed
+def typewriter(text: str, speed=10):
+    tokens = text.split()
+    container = st.empty()
+    for index in range(len(tokens) + 1):
+        curr_full_text = " ".join(tokens[:index])
+        container.markdown(curr_full_text)
+        time.sleep(1 / speed)
+
+
+
+
+# 2.2 Website Layout: banner & header
+
+st.markdown("""
+<style>
+.banner {
+  background: #000000;
+  color: white;
+  padding: 10px;
+  position: relative;
+  text-align: center;
+  border-radius: 10px;
+  max-height: 400px;  /* Set the maximum height of the banner */
+  overflow: hidden;  /* Hide the excess part of the image */
+}
+</style>
+
+<div class="banner">
+  <h1>TuneScout</h1>
+  <p>For the audiophiles,<br>the musical nomads,<br>the ones who never heard enough</p>
+</div>
+""", unsafe_allow_html=True)
+
+
+# 2.3 Load MP3
+input_file = st.file_uploader('',type=["mp3"]) # The st.file_uploader function returns a BytesIO object for the uploaded file.
+
+# 2.4 Create buttons
+col1, col2, col3 = st.columns(3, )
+
+custom_css = """
+    <style>
+        .custom-button {
+            width: 100%; /* Set the desired width here */
+        }
+    </style>
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
+
+# Button 1: Suggest
+if col1.button('Suggest'):
+    response = example_prediction
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
+    ax.set_title('Similarity of artists')
+    ax.set_yticks([0.2, 0.6, 0.8])
+    ax.set_yticklabels(['low', 'medium', 'high'])
+    ax.set_xlabel('Artists')
+    ax.set_ylabel('Similarity Score')
+
+    # Show the plot using st.pyplot()
+    st.pyplot(fig)
+
+
+# Button 2: Inspire me
+if col2.button('Inspire me'):
+    st.write("Composer suggestions (chatgpt input) printed here!")
+    if True:
         response = example_prediction
         top_composer = max(response.items(), key=lambda x: x[1])[0]
 
@@ -114,19 +155,48 @@ if True:
         st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
 
 
-# 2.2 run input_file thru main function to predict composer
 
-# if composer is not None:
-#     for i, row in composer.iterrows():
-#         if row is not None:
-#             image_path = "/Users/d.haverkort/code/HugoA45/music_project/music_project/temp/bethel_church.png"
+# Button 3: Info
+if col3.button('Info'):
+    client = OpenAI()
+    top_composer = max(response.items(), key = lambda x: x[1])[0]
+    completion = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are an informative and helpful assistant, skilled in explaining recommendations for composers in music."
+                },
+                {
+                    "role": "user",
+                    "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
+                },
+                {
+                    "role": "user",
+                    "content": f"we have a composer that was predicted by a model which is {top_composer}.and we want you to give recommendation for similar artists. dont describe the composer but rather only the ones that are similar and why. we dont need the first introduction on the {top_composer}. just create the list of 4 similar composers"
+                }
+            ]
+        )
+    st.write(completion.choices[0].message.content)
 
-#             st.image(image_path, caption={row["Composer"]}, use_column_width=True)
 
-#     for i, row in composer.iterrows():
-#         if i == 0:
-#             typewriter(f'I think the composer is {row["Composer"]}')
-#         else:
-#             typewriter(f'But it could alse be {row["Composer"]}')
-# else:
-#     st.write("Composer not found or input file not provided.")
+
+#if input_file is not None:
+# if True:
+    # with st.spinner('Processing the mp3 file...'):
+        #import requests
+        #url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
+        #files = {'file': input_file}
+        #response = requests.post(url,files=files).json()
+
+        #making layout of the prediction
+        # response = example_prediction
+        # top_composer = max(response.items(), key=lambda x: x[1])[0]
+
+        # #artist title
+        # st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
+        # #artist image
+        # composer_image = composer_image_dict[top_composer]
+        # st.image(composer_image, use_column_width=True)
+        # #artist info text
+        # st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
