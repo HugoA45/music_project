@@ -67,27 +67,67 @@ def typewriter(text: str, speed=10):
 
 
 
-# 2.2 Website Layout: banner & header
+# 2.2 Website Layout:
+#
+st.set_page_config(
+    page_title="TuneScout",
+    page_icon="🎵",
+    layout="wide"
+)
+# Generic layout
+st.markdown(
+    """
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .banner {
+            background: #FF6F61;
+            color: #000000;
+            padding: 10px;
+            position: relative;
+            text-align: center;
+            border-radius: 10px;
+            max-height: 400px; /* max height of the banner */
+            overflow: hidden; /* Hide excess part of the image */
+        }
+        h1 {
+            color: #ffffff; /* White title text */
+        }
+        p {
+            color: #ffffff;
+        }
+        .custom-button {
+            background-color: #FF6F61; /* Orange button */
+            color: #000000;
+            width: 200px; /* Set the desired width here */
+            height: 50px; /* Set the desired height here */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .custom-button:hover {
+            background-color: #ff8253; /* Lighter shade on hover */
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-st.markdown("""
-<style>
-.banner {
-  background: #000000;
-  color: white;
-  padding: 10px;
-  position: relative;
-  text-align: center;
-  border-radius: 10px;
-  max-height: 400px;  /* Set the maximum height of the banner */
-  overflow: hidden;  /* Hide the excess part of the image */
-}
-</style>
+# Main content
+st.markdown(
+    """
+    <div class="banner">
+      <h1>TuneScout</h1>
+      <p>For the audiophiles,<br>the musical nomads,<br>the ones who never heard enough</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-<div class="banner">
-  <h1>TuneScout</h1>
-  <p>For the audiophiles,<br>the musical nomads,<br>the ones who never heard enough</p>
-</div>
-""", unsafe_allow_html=True)
+
 
 
 # 2.3 Load MP3
@@ -100,56 +140,61 @@ if input_file is not None:
         files = {'file': input_file}
         response = requests.post(url,files=files).json()
 
-    # 2.4 Buttons
-    col1, col2, col3 = st.columns(3)
+# Ouput
+response = example_prediction
+# top_composer = max(response.items(), key=lambda x: x[1])[0]
 
-    # Button 1: Suggest
-    if col1.button('Artist similarity'):
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
-        ax.set_title('Similarity of artists')
-        ax.set_yticks([0.2, 0.6, 0.8])
-        ax.set_yticklabels(['low', 'medium', 'high'])
-        ax.set_xlabel('Artists')
-        ax.set_ylabel('Similarity Score')
+# 2.4 Buttons
+col1, col2, col3 = st.columns((200,200,200))
 
-        # Show the plot in the sidebar
-        st.pyplot(fig)
+# Button Layout
+# custom_css = """
+#     <style>
+#         .custom-button {
+#             width: 50px; /* Set the desired width here */
+#         }
+#     </style>
+# """
 
-    # Button 2: Inspire me
-    if col2.button('Check Similar Artits'):
-        st.write("Here are some artist recomendations based on the mp3 file that you selected!")
-        api_key = st.secrets["openai"]["api_key"]
-        client = openai.OpenAI(api_key=api_key)
-        top_composer = max(response.items(), key = lambda x: x[1])[0]
-        completion = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an informative and helpful assistant, skilled in explaining recommendations for composers in music."
-                },
-                {
-                    "role": "user",
-                    "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
-                },
-                {
-                    "role": "user",
-                    "content": f"we have a composer that was predicted by a model which is {top_composer}.and we want you to give recommendation for similar artists. dont describe the composer but rather only the ones that are similar and why. we dont need the first introduction on the {top_composer}. just create the list of 4 similar composers"
-                }
-            ]
-        )
-        st.write(completion.choices[0].message.content)
+#st.markdown(custom_css, unsafe_allow_html=True)
 
-    # Button 3: Info
-    if col3.button('Top Artist Information:'):
-        if True:
-            top_composer = max(response.items(), key=lambda x: x[1])[0]
 
-            #artist title
-            st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
-            #artist image
-            composer_image = composer_image_dict[top_composer]
-            st.image(composer_image, use_column_width=True)
-            #artist info text
-            st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
+# Button 1: Suggest
+if col1.button('Suggest', key="suggest_button"): #, class_="custom-button"):
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
+    ax.set_title('Similarity of artists')
+    ax.set_yticks([0.2, 0.6, 0.8])
+    ax.set_yticklabels(['low', 'medium', 'high'])
+    ax.set_xlabel('Artists')
+    ax.set_ylabel('Similarity Score')
+
+    # Show the plot in the sidebar
+    st.pyplot(fig)
+
+# Button 2: Inspire me
+if col2.button('Inspire me', key="inspire_button"): #, class_="custom-button"):
+    st.write("Composer suggestions (chatgpt input) printed here!")
+    api_key = st.secrets['OPENAI_API_KEY']
+    client = OpenAI()
+    top_composer = max(response.items(), key = lambda x: x[1])[0]
+    completion = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            # ... (chat messages)
+        ]
+    )
+    st.write(completion.choices[0].message.content)
+
+# Button 3: Info
+if col3.button('Info', key="info_button"): #, class_="custom-button"):
+    if True:
+        top_composer = max(response.items(), key=lambda x: x[1])[0]
+
+        # artist title
+        st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
+        # artist image
+        composer_image = composer_image_dict[top_composer]
+        st.image(composer_image, use_column_width=True)
+        # artist info text
+        st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
