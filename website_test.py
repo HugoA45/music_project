@@ -86,27 +86,67 @@ def typewriter(text: str, speed=10):
 
 
 
-# 2.2 Website Layout: banner & header
+# 2.2 Website Layout:
+#
+st.set_page_config(
+    page_title="TuneScout",
+    page_icon="🎵",
+    layout="wide"
+)
+# Generic layout
+st.markdown(
+    """
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .banner {
+            background: #FF6F61;
+            color: #000000;
+            padding: 10px;
+            position: relative;
+            text-align: center;
+            border-radius: 10px;
+            max-height: 400px; /* max height of the banner */
+            overflow: hidden; /* Hide excess part of the image */
+        }
+        h1 {
+            color: #ffffff; /* White title text */
+        }
+        p {
+            color: #ffffff;
+        }
+        .custom-button {
+            background-color: #FF6F61; /* Orange button */
+            color: #000000;
+            width: 200px; /* Set the desired width here */
+            height: 50px; /* Set the desired height here */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .custom-button:hover {
+            background-color: #ff8253; /* Lighter shade on hover */
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-st.markdown("""
-<style>
-.banner {
-  background: #000000;
-  color: white;
-  padding: 10px;
-  position: relative;
-  text-align: center;
-  border-radius: 10px;
-  max-height: 400px;  /* Set the maximum height of the banner */
-  overflow: hidden;  /* Hide the excess part of the image */
-}
-</style>
+# Main content
+st.markdown(
+    """
+    <div class="banner">
+      <h1>TuneScout</h1>
+      <p>For the audiophiles,<br>the musical nomads,<br>the ones who never heard enough</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-<div class="banner">
-  <h1>TuneScout</h1>
-  <p>For the audiophiles,<br>the musical nomads,<br>the ones who never heard enough</p>
-</div>
-""", unsafe_allow_html=True)
+
 
 
 # 2.3 Load MP3
@@ -119,26 +159,27 @@ if input_file is not None:
         files = {'file': input_file}
         #response = requests.post(url,files=files).json()
 
-# making layout of the prediction
+# Ouput
 response = example_prediction
-        # top_composer = max(response.items(), key=lambda x: x[1])[0]
+# top_composer = max(response.items(), key=lambda x: x[1])[0]
 
+# 2.4 Buttons
+col1, col2, col3 = st.columns((200,200,200))
 
-    # Button lay-out
+# Button Layout
 # custom_css = """
 #     <style>
 #         .custom-button {
-#             width: 100%; /* Set the desired width here */
+#             width: 50px; /* Set the desired width here */
 #         }
 #     </style>
 # """
-# st.markdown(custom_css, unsafe_allow_html=True)
 
-# 2.4 Buttons
-col1, col2, col3 = st.columns(3)
+#st.markdown(custom_css, unsafe_allow_html=True)
+
 
 # Button 1: Suggest
-if col1.button('Suggest'):
+if col1.button('Suggest', key="suggest_button"): #, class_="custom-button"):
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
     ax.set_title('Similarity of artists')
@@ -151,7 +192,7 @@ if col1.button('Suggest'):
     st.pyplot(fig)
 
 # Button 2: Inspire me
-if col2.button('Inspire me'):
+if col2.button('Inspire me', key="inspire_button"): #, class_="custom-button"):
     st.write("Composer suggestions (chatgpt input) printed here!")
     api_key = st.secrets['OPENAI_API_KEY']
     client = OpenAI()
@@ -165,14 +206,14 @@ if col2.button('Inspire me'):
     st.write(completion.choices[0].message.content)
 
 # Button 3: Info
-if col3.button('Info'):
+if col3.button('Info', key="info_button"): #, class_="custom-button"):
     if True:
         top_composer = max(response.items(), key=lambda x: x[1])[0]
 
-        #artist title
+        # artist title
         st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
-        #artist image
+        # artist image
         composer_image = composer_image_dict[top_composer]
         st.image(composer_image, use_column_width=True)
-        #artist info text
+        # artist info text
         st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
