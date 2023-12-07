@@ -109,16 +109,6 @@ if input_file is not None:
     else:
             response = st.session_state['mp3_response']
 
-
-    #composers = sorted(response.keys())
-    #if 'composer_index' not in st.session_state:
-    #    st.session_state['composer_index'] = 0
-
-    # Use the session state value for the slider
-    #st.session_state['composer_index'] = st.slider('Select a artist:', 0, len(composers)-1, st.session_state['composer_index'])
-    #selected_composer = composers[st.session_state['composer_index']]
-    #st.write(f"You selected: {selected_composer}")
-
     composers = sorted(response.keys())
     selected_composer = st.selectbox('Select a artist:', composers)
     st.write(f"You selected: {selected_composer}")
@@ -174,15 +164,13 @@ if input_file is not None:
 
     # Button 3: Info
     if col3.button('Top Artist Information'):
-        top_composer = max(response.items(), key=lambda x: x[1])[0]
-
         #artist title
-        st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<h1 style='text-align: center'>{selected_composer} - {composer_genre_dict[selected_composer]}</h1>", unsafe_allow_html=True)
         #artist image
-        composer_image = composer_image_dict[top_composer]
+        composer_image = composer_image_dict[selected_composer]
         st.image(composer_image, use_column_width=True)
         #artist info text
-        st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='text-align: justify'>{composer_info_dict[selected_composer]}</div>", unsafe_allow_html=True)
 
     if col4.button('Input another file'):
         st.session_state['mp3_response'] = None
