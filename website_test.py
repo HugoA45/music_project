@@ -109,6 +109,15 @@ if input_file is not None:
     else:
             response = st.session_state['mp3_response']
 
+    composers = sorted(response.keys())
+    if 'composer_index' not in st.session_state:
+        st.session_state['composer_index'] = 0
+
+    # Use the session state value for the slider
+    st.session_state['composer_index'] = st.slider('Select a artist:', 0, len(composers)-1, st.session_state['composer_index'])
+    selected_composer = composers[st.session_state['composer_index']]
+    st.write(f"You selected: {selected_composer}")
+
     # 2.4 Buttons
     col1, col2, col3, col4 = st.columns(4)
 
@@ -125,39 +134,29 @@ if input_file is not None:
         # Show the plot in the sidebar
         st.pyplot(fig)
 
-    # Button 2: Inspire me
-    composers = sorted(response.keys())
-    if 'composer_index' not in st.session_state:
-        st.session_state['composer_index'] = 0
-
-    # Use the session state value for the slider
-    st.session_state['composer_index'] = st.slider('Select a artist:', 0, len(composers)-1, st.session_state['composer_index'])
-    selected_composer = composers[st.session_state['composer_index']]
-    st.write(f"You selected: {selected_composer}")
-
     if col2.button('Recomendation for Similar Artits'):
         st.write("\nHere are some artist recomendations based on the mp3 file that you selected!")
         api_key = st.secrets["openai"]["api_key"]
         client = openai.OpenAI(api_key=api_key)
-        composer = selected_composer
+
         completion = client.chat.completions.create(
             model="gpt-4",
             messages=[
             {
                 "role": "system",
-                "content": "You are an informative and helpful assistant, skilled in explaining recommendations for composers in music."
+                "content": "You are an informative and helpful assistant, skilled in explaining recommendations for selected_composers in music."
             },
             {
                 "role": "user",
-                "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
+                "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and selected_composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
             },
             {
                 "role": "user",
-                "content": f"We have a composer that was predicted by a model which is {composer}. \
+                "content": f"We have a selected_composer that was predicted by a model which is {selected_composer}. \
                                 We want you to give recommendation similar artists - Artist Name. \
                                 We want 3 song recomendation for each artist. \
-                                No description of {composer} but rather only the ones that are similar and why. \
-                                we dont need the a introduction on the {composer}.\
+                                No description of {selected_composer} but rather only the ones that are similar and why. \
+                                we dont need the a introduction on the {selected_composer}.\
                                 Please provide the information in the following format:\
                                 \n\n1. Artist Name\
                                 \n   - Reason for similarity:\
