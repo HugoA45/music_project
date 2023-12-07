@@ -109,16 +109,16 @@ if input_file is not None:
     else:
             response = st.session_state['mp3_response']
 
-    '''
-    composers = sorted(response.keys())
-    if 'composer_index' not in st.session_state:
-        st.session_state['composer_index'] = 0
+
+    #composers = sorted(response.keys())
+    #if 'composer_index' not in st.session_state:
+    #    st.session_state['composer_index'] = 0
 
     # Use the session state value for the slider
-    st.session_state['composer_index'] = st.slider('Select a artist:', 0, len(composers)-1, st.session_state['composer_index'])
-    selected_composer = composers[st.session_state['composer_index']]
-    st.write(f"You selected: {selected_composer}")
-    '''
+    #st.session_state['composer_index'] = st.slider('Select a artist:', 0, len(composers)-1, st.session_state['composer_index'])
+    #selected_composer = composers[st.session_state['composer_index']]
+    #st.write(f"You selected: {selected_composer}")
+
     composers = sorted(response.keys())
     selected_composer = st.selectbox('Select a artist:', composers)
     st.write(f"You selected: {selected_composer}")
