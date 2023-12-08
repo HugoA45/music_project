@@ -120,6 +120,9 @@ if input_file is not None:
             response = st.session_state['mp3_response']
 
     # 2.4 Buttons
+    with open('style.css') as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
     col1, col2, col3 = st.columns(3)
 
 

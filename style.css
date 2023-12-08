@@ -1,0 +1,32 @@
+
+/* Center the columns */
+.css-1r6slb0.e1tzin5v2 {
+  position: relative;
+  margin: auto;
+  width: 9%; /* You can adjust the width as needed */
+  text-align: center; /* Center text within the column */
+}
+
+/* Style the buttons */
+.css-1cpxqw2.edgvbvh9 {
+  font-size: 16px; /* Adjust the font size as needed */
+  padding: 8px 30px; /* Adjust the padding as needed */
+  display: inline-block; /* Display as inline block to center horizontally */
+  border: 2px solid transparent; /* Set an initial transparent border */
+  color: #FFFAFA; /* Set the initial text color */
+  background-color: transparent; /* Set the initial background color */
+  transition: border-color 0.3s, color 0.3s, background-color 0.3s; /* Add smooth transition effects */
+}
+
+/* Change the border color when the button is clicked */
+.css-1cpxqw2.edgvbvh9:hover, .css-1cpxqw2.edgvbvh9:active {
+  border-color: #034d54; /* Set the desired border color on hover and click */
+}
+
+.css-1cpxqw2.edgvbvh9:focus {
+  border-color: #1c8b94; /* Set the border color on click or focus */
+  color: #1c8b94; /* Set the text color on click or focus */
+  background-color: transparent; /* Set the background color on click or focus */
+  outline: none; /* Remove the default focus outline */
+  box-shadow: none; /* Remove the default focus glow */
+}
