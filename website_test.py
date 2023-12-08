@@ -119,8 +119,12 @@ if input_file is not None:
     else:
             response = st.session_state['mp3_response']
 
+    composers = sorted(response.keys())
+    selected_composer = st.selectbox('Select a artist:', composers)
+    st.write(f"You selected: {selected_composer}")
+
     # 2.4 Buttons
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
 
     # Button 1: Suggest
     if col1.button('Curate'):
