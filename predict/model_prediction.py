@@ -10,14 +10,14 @@ def prediction(data, model, task='composer_classification'):
 
     if task == 'composer_classification':
 
-        composer_names = ['Bethel Music (Religious)',
+        composer_names = ['Bethel Music',
                           'Richard Clayderman',
                           'Ludovico Einaudy',
                           'Herbie Hancock',
-                          'Hillsong Worship (Religious)',
-                          'Joe Hisaishi (Contemporary)',
-                          'Ryuichy Sakamoto (Contemporary)',
-                          'Yiruma (pop)']
+                          'Hillsong Worship',
+                          'Joe Hisaishi',
+                          'Ryuichy Sakamoto',
+                          'Yiruma']
 
         model.classifier = nn.Linear(model.hidden_size, len(composer_names))
         logits = model.classifier(res.last_hidden_state)

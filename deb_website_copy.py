@@ -50,7 +50,7 @@ composer_image_dict = {'Bethel Music': 'resources/composer_images/bethel_church.
 
 example_prediction = {  'Bethel Music': 0.8,
                         'Richard Clayderman' : 0.1,
-                        'Ludovico Einaudy': 0.1}
+                        'Ludovico Einaudi': 0.1}
 
 
 # 2. Website
@@ -60,20 +60,8 @@ st.set_page_config(
     #layout="wide",
     initial_sidebar_state="collapsed"
 )
-# 2.1 Website Function: typewriter - slow down typing speed
-def typewriter(text: str, speed=10):
-    tokens = text.split()
-    container = st.empty()
-    for index in range(len(tokens) + 1):
-        curr_full_text = " ".join(tokens[:index])
-        container.markdown(curr_full_text)
-        time.sleep(1 / speed)
-
-
-
 
 # 2.2 Website Layout: banner & header
-
 st.markdown("""
 <style>
 .banner {
@@ -119,6 +107,12 @@ if input_file is not None:
     else:
             response = st.session_state['mp3_response']
 
+    composers = sorted(response.keys())
+    if "composer" not in st.session_state:
+        st.session_state["composer"] = 0
+    selected_composer = st.selectbox('Select a artist:', composers, st.session_state["composer"] )
+    st.write(f"You selected: {selected_composer}")
+
     # 2.4 Buttons
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
@@ -129,7 +123,7 @@ if input_file is not None:
     # Button 1: Suggest
     if col1.button('Curate'):
         with st.spinner('Matching your tune to artists in our database...'):
-            st.write("Dusted off the records, here are some artists that match your taste!")
+            st.write("Dusted off the records, here are some artists that match your taste..")
             st.markdown("""
                 <div style='text-align: center;'>
                     <h2>Curated Artists</h2>
@@ -177,27 +171,36 @@ if input_file is not None:
     # Button 2: Inspire me
     if col2.button('Discover'):
         with st.spinner('Exploring the cyberspace for some musical gems...'):
-            time.sleep(2)
-            st.write("Finding songs that you might like")
+            time.sleep(5)
+            st.write("Finding music to get you inspired")
             api_key = st.secrets["openai"]["api_key"]
             client = openai.OpenAI(api_key=api_key)
-            top_composer = max(response.items(), key = lambda x: x[1])[0]
+            #selected_composer = max(response.items(), key = lambda x: x[1])[0]
             completion = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an informative and helpful assistant, skilled in explaining recommendations for composers in music."
-                    },
-                    {
-                        "role": "user",
-                        "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
-                    },
-                    {
-                        "role": "user",
-                        "content": f"We have a composer that was predicted by a model which is {top_composer}. We want you to give recommendation similar artists. No description of {top_composer} but rather only the ones that are similar and why. we dont need the a introduction on the {top_composer}. just create the list of 4 similar composers. give me 3 songs for each artist afterwards"
-                    }
-                ]
+            {
+                "role": "system",
+                "content": "You are an informative and helpful assistant, skilled in explaining recommendations for selected_composers in music."
+            },
+            {
+                "role": "user",
+                "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and selected_composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
+            },
+            {
+                "role": "user",
+                "content": f"We have a selected_composer that was predicted by a model which is {selected_composer}. \
+                                We want you to give recommendation similar artists - Artist Name. \
+                                We want 3 song recomendation for each artist. \
+                                No description of {selected_composer} but rather only the ones that are similar and why. \
+                                we dont need the a introduction on the {selected_composer}.\
+                                Please provide the information in the following format:\
+                                \n\n1. Artist Name\
+                                \n   - Reason for similarity:\
+                                \n   - Song recomendation for Artist Name:\
+                                \n\nRepeat this for four artists."\
+            }
+            ]
             )
             for message in completion.choices:
                 st.write(completion.choices[0].message.content)
@@ -208,12 +211,12 @@ if input_file is not None:
     # Button 3: Info
     if col3.button('Insights'):
         if True:
-            top_composer = max(response.items(), key=lambda x: x[1])[0]
+            selected_composer = max(response.items(), key=lambda x: x[1])[0]
 
             #artist title
-            st.markdown(f"<h1 style='text-align: center'>{top_composer} - {composer_genre_dict[top_composer]}</h1>", unsafe_allow_html=True)
+            st.markdown(f"<h1 style='text-align: center'>{selected_composer} - {composer_genre_dict[selected_composer]}</h1>", unsafe_allow_html=True)
             #artist image
-            composer_image = composer_image_dict[top_composer]
+            composer_image = composer_image_dict[selected_composer]
             st.image(composer_image, use_column_width=True)
             #artist info text
-            st.markdown(f"<div style='text-align: justify'>{composer_info_dict[top_composer]}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align: justify'>{composer_info_dict[selected_composer]}</div>", unsafe_allow_html=True)

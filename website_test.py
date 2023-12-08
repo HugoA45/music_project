@@ -1,8 +1,8 @@
 
 '''
 Streamlit function
-UNTIL CKPT IS ON CLOUD, THIS CAN CURRENTLY ONLY BE RUN LOCALLY
 '''
+# logo = '/Users/d.haverkort/code/HugoA45/music_project/music_project/resources/Screenshot 2023-12-07 at 16.58.28.png'
 
 # 1. Import packages
 # 1.1 Python packages
@@ -55,7 +55,12 @@ example_prediction = {  'Bethel Music': 0.8,
 
 
 # 2. Website
-
+st.set_page_config(
+    page_title="TuneScout",
+    page_icon="🎵",
+    #layout="wide",
+    initial_sidebar_state="collapsed"
+)
 # 2.1 Website Function: typewriter - slow down typing speed
 def typewriter(text: str, speed=10):
     tokens = text.split()
@@ -79,14 +84,19 @@ st.markdown("""
   position: relative;
   text-align: center;
   border-radius: 10px;
-  max-height: 400px;  /* Set the maximum height of the banner */
-  overflow: hidden;  /* Hide the excess part of the image */
+  max-height: 400px;  /* Banner max height */
+  overflow: hidden;  /* Hide excess banner image */
+}
+.banner h1 {
+  color: white; /* White color for TuneScout */
+  border-bottom: 2px solid #68D3CE; /* Line under TuneScout with color #68D3CE */
+  padding-bottom: 5px; /* Add some space between text and line */
 }
 </style>
 
 <div class="banner">
   <h1>TuneScout</h1>
-  <p>For the audiophiles,<br>the musical nomads,<br>the ones who never heard enough</p>
+  <p><br>For the audiophiles,<br>the musical nomads,<br>for the ones who never heard enough</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -101,8 +111,8 @@ input_file = st.file_uploader('',type=["mp3"]) # The st.file_uploader function r
 
 if input_file is not None:
     if st.session_state['mp3_response'] is None:
-        with st.spinner('Processing the mp3 file...'):
-            url = "https://music-fbzdapc47q-ew.a.run.app" # change for API URL
+        with st.spinner('Dusting off the records...'):
+            url = "https://music-fbzdapc47q-ew.a.run.app"
             files = {'file': input_file}
             response = requests.post(url,files=files).json()
             st.session_state['mp3_response'] = response
@@ -113,45 +123,48 @@ if input_file is not None:
     col1, col2, col3 = st.columns(3)
 
     # Button 1: Suggest
-    if col1.button('Artist similarity'):
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
-        ax.set_title('Similarity of artists')
-        ax.set_yticks([0.2, 0.6, 0.8])
-        ax.set_yticklabels(['low', 'medium', 'high'])
-        ax.set_xlabel('Artists')
-        ax.set_ylabel('Similarity Score')
+    if col1.button('Curate'):
+        with st.spinner('Matching your tune to artists in our database...'):
+            st.write("Dusted off the records, here are some artists that match your taste!")
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.bar(response.keys(), response.values(), color=['skyblue', 'orange', 'green'])
+            ax.set_title('Curated artists')
+            ax.set_yticks([0.2, 0.6, 0.8])
+            ax.set_yticklabels(['low', 'medium', 'high'])
+            ax.set_xlabel('Artists')
+            ax.set_ylabel('Similarity')
 
-        # Show the plot in the sidebar
-        st.pyplot(fig)
+            # Show the plot in the sidebar
+            st.pyplot(fig)
 
     # Button 2: Inspire me
-    if col2.button('Recomendation for Similar Artits'):
-        st.write("Here are some artist recomendations based on the mp3 file that you selected!")
-        api_key = st.secrets["openai"]["api_key"]
-        client = openai.OpenAI(api_key=api_key)
-        top_composer = max(response.items(), key = lambda x: x[1])[0]
-        completion = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an informative and helpful assistant, skilled in explaining recommendations for composers in music."
-                },
-                {
-                    "role": "user",
-                    "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
-                },
-                {
-                    "role": "user",
-                    "content": f"We have a composer that was predicted by a model which is {top_composer}. We want you to give recommendation similar artists. No description of {top_composer} but rather only the ones that are similar and why. we dont need the a introduction on the {top_composer}. just create the list of 4 similar composers. give me 3 songs for each artist afterwards"
-                }
-            ]
-        )
-        st.write(completion.choices[0].message.content)
+    if col2.button('Discover'):
+        with st.spinner('Exploring the Digital Realm for some musical gems...'):
+            st.write("Dusted off the records, here are some song that you might like")
+            api_key = st.secrets["openai"]["api_key"]
+            client = openai.OpenAI(api_key=api_key)
+            top_composer = max(response.items(), key = lambda x: x[1])[0]
+            completion = client.chat.completions.create(
+                model="gpt-4",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an informative and helpful assistant, skilled in explaining recommendations for composers in music."
+                    },
+                    {
+                        "role": "user",
+                        "content": "We already have a description like this: Bethel Music (Religious): Formed in 2001, Bethel Music emerged from the Bethel Church in Redding, California. [...] Yiruma (Born 1978): South Korean pianist and composer Yiruma (Lee Ru-ma) gained international fame in the early 2000s. His melodic and accessible compositions, often falling into the contemporary classical and pop genres, have made him popular among diverse audiences."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"we have a composer that was predicted by a model which is {top_composer}.and we want you to give recommendation for similar artists. dont describe the composer but rather only the ones that are similar and why. we dont need the first introduction on the {top_composer}. just create the list of 4 similar composers. give me 3 songs for each artist afterwards"
+                    }
+                ]
+            )
+            st.write(completion.choices[0].message.content)
 
     # Button 3: Info
-    if col3.button('Top Artist Information'):
+    if col3.button('Insight'):
         if True:
             top_composer = max(response.items(), key=lambda x: x[1])[0]
 
